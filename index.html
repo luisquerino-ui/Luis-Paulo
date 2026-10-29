@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="StudyFlow: organize tarefas escolares, planeje horários semanais, teste seus conhecimentos no Quiz com IA Tutora e acerte seus estudos no modo escuro.">
+  <title>StudyFlow | Organizador de Estudos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="StudyFlow página inicial">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span class="brand-name">StudyFlow</span>
+    </a>
+    <div class="topbar-actions">
+      <span class="top-note">Seu espaço de foco ✦</span>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Alternar tema escuro/claro" title="Alternar entre modo claro e escuro">
+        <span id="theme-icon" class="theme-icon" aria-hidden="true">☀️</span>
+        <span id="theme-text" class="theme-text">Modo Claro</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-content" class="container">
+    <section class="welcome">
+      <div>
+        <p class="eyebrow">SEU PAINEL DE ESTUDOS</p>
+        <h1>Um passo de cada vez<span>.</span></h1>
+        <p class="subtitle">Organize tarefas, planeje horários semanais, teste seus conhecimentos no Quiz com IA Tutora e domine seus estudos.</p>
+      </div>
+      <div class="date-card" aria-label="Data de hoje">
+        <span class="date-tag">HOJE</span>
+        <strong id="today-date">Carregando data...</strong>
+      </div>
+    </section>
+
+    <!-- Banner Informativo do Estudo de Hoje -->
+    <div id="today-schedule-banner" class="today-banner" style="display: none;">
+      <div class="today-banner-content">
+        <span class="banner-icon" aria-hidden="true">⚡</span>
+        <p id="today-banner-text">Você tem estudos planejados para hoje!</p>
+      </div>
+      <button id="today-banner-btn" class="today-banner-btn" type="button">Ver horários de hoje ➔</button>
+    </div>
+
+    <!-- Navegação Principal por Abas -->
+    <nav class="main-tabs" role="tablist" aria-label="Seções do organizador de estudos">
+      <button id="tab-tasks" class="tab-btn active" role="tab" aria-selected="true" aria-controls="tasks-view">
+        <span class="tab-icon" aria-hidden="true">📋</span>
+        <span class="tab-title">Tarefas & Prazos</span>
+        <span id="tab-tasks-count" class="tab-badge" aria-label="total de tarefas">0</span>
+      </button>
+      <button id="tab-schedule" class="tab-btn" role="tab" aria-selected="false" aria-controls="schedule-view">
+        <span class="tab-icon" aria-hidden="true">⏰</span>
+        <span class="tab-title">Horários de Estudo</span>
+        <span id="tab-schedule-count" class="tab-badge" aria-label="total de horários">0</span>
+      </button>
+      <button id="tab-quiz" class="tab-btn" role="tab" aria-selected="false" aria-controls="quiz-view">
+        <span class="tab-icon" aria-hidden="true">🎯</span>
+        <span class="tab-title">Quiz com IA</span>
+        <span class="new-pill">IA</span>
+      </button>
+      <button id="tab-tips" class="tab-btn" role="tab" aria-selected="false" aria-controls="tips-view">
+        <span class="tab-icon" aria-hidden="true">💡</span>
+        <span class="tab-title">Dicas</span>
+      </button>
+      <button id="tab-ebook" class="tab-btn tab-highlight" role="tab" aria-selected="false" aria-controls="ebook-view">
+        <span class="tab-icon" aria-hidden="true">📖</span>
+        <span id="tab-ebook-title" class="tab-title">E-book (R$ 19,90)</span>
+      </button>
+    </nav>
+
+    <!-- ABA 1: MINHAS TAREFAS -->
+    <div id="tasks-view" class="tab-content active" role="tabpanel" aria-labelledby="tab-tasks">
+      <section class="stats" aria-label="Resumo das tarefas">
+        <article id="stat-card-total" class="stat-card clickable" tabindex="0" role="button" aria-label="Filtrar todas as tarefas">
+          <div class="stat-icon purple" aria-hidden="true">▤</div>
+          <div class="stat-info">
+            <p>Total de tarefas</p>
+            <strong id="total-count">0</strong>
+          </div>
+        </article>
+        <article id="stat-card-pending" class="stat-card clickable" tabindex="0" role="button" aria-label="Filtrar tarefas pendentes">
+          <div class="stat-icon orange" aria-hidden="true">◷</div>
+          <div class="stat-info">
+            <p>Pendentes</p>
+            <strong id="pending-count">0</strong>
+          </div>
+        </article>
+        <article id="stat-card-done" class="stat-card clickable" tabindex="0" role="button" aria-label="Filtrar tarefas concluídas">
+          <div class="stat-icon green" aria-hidden="true">✓</div>
+          <div class="stat-info">
+            <p>Concluídas</p>
+            <strong id="done-count">0</strong>
+          </div>
+        </article>
+        <article class="stat-card progress-stat">
+          <div class="stat-icon blue" aria-hidden="true">↗</div>
+          <div class="progress-copy">
+            <div class="progress-header">
+              <p id="progress-heading">Seu progresso</p>
+              <strong id="progress-label">0%</strong>
+            </div>
+            <div class="progress-track">
+              <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-labelledby="progress-heading progress-label"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <div class="panel form-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" id="form-eyebrow">PLANEJAMENTO</p>
+              <h2 id="form-heading-text">Adicionar tarefa</h2>
+            </div>
+            <span id="heading-icon" class="heading-icon" aria-hidden="true">＋</span>
+          </div>
+
+          <form id="task-form" novalidate>
+            <div class="field-header">
+              <label for="task-title">Nome da tarefa <span class="required" aria-hidden="true">*</span></label>
+              <span id="title-counter" class="char-counter" aria-live="polite">0/80</span>
+            </div>
+            <input id="task-title" name="title" type="text" maxlength="80" placeholder="Ex.: Revisar fórmulas de matemática" required aria-describedby="field-hint form-message" autocomplete="off">
+            <p id="field-hint" class="field-hint">Dê um nome claro e objetivo (mínimo de 2 caracteres).</p>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="task-subject">Matéria <span class="required" aria-hidden="true">*</span></label>
+                <select id="task-subject" name="subject" required aria-describedby="form-message">
+                  <option value="">Escolha uma matéria</option>
+                  <option value="Matemática">Matemática</option>
+                  <option value="Português">Português</option>
+                  <option value="História">História</option>
+                  <option value="Geografia">Geografia</option>
+                  <option value="Ciências">Ciências</option>
+                  <option value="Inglês">Inglês</option>
+                  <option value="Artes">Artes</option>
+                  <option value="Programação">Programação</option>
+                  <option value="Outra">Outra</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="task-priority">Prioridade</label>
+                <select id="task-priority" name="priority">
+                  <option value="normal">Normal</option>
+                  <option value="alta">Alta</option>
+                  <option value="baixa">Baixa</option>
+                </select>
+              </div>
+            </div>
+
+            <label for="task-date">Data de entrega <span class="optional">(opcional)</span></label>
+            <input id="task-date" name="date" type="date" aria-describedby="form-message">
+
+            <div class="form-actions">
+              <button id="add-task-btn" class="primary-btn" type="submit">
+                <span id="btn-icon" class="btn-icon" aria-hidden="true">＋</span>
+                <span id="submit-btn-text">Adicionar tarefa</span>
+              </button>
+              <button id="cancel-edit-btn" class="secondary-btn" type="button" style="display: none;">
+                Cancelar
+              </button>
+            </div>
+
+            <p id="form-message" class="message" role="status" aria-live="polite" aria-atomic="true"></p>
+          </form>
+        </div>
+
+        <div class="panel tasks-panel">
+          <div class="tasks-heading">
+            <div>
+              <p class="eyebrow">SUA ROTINA</p>
+              <h2>Minhas tarefas</h2>
+            </div>
+            <span id="task-count-badge" class="count-badge" aria-live="polite">0 tarefas</span>
+          </div>
+
+          <div class="toolbar">
+            <label class="search-wrap" for="search-input">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input id="search-input" type="search" placeholder="Buscar por tarefa ou matéria..." aria-label="Buscar tarefa por título ou matéria">
+            </label>
+            <div class="filter-controls">
+              <select id="filter-select" aria-label="Filtrar tarefas por situação">
+                <option value="todas">Todas as situações</option>
+                <option value="pendentes">Pendentes</option>
+                <option value="concluidas">Concluídas</option>
+              </select>
+              <select id="filter-subject" aria-label="Filtrar por matéria">
+                <option value="todas">Todas as matérias</option>
+                <option value="Matemática">Matemática</option>
+                <option value="Português">Português</option>
+                <option value="História">História</option>
+                <option value="Geografia">Geografia</option>
+                <option value="Ciências">Ciências</option>
+                <option value="Inglês">Inglês</option>
+                <option value="Artes">Artes</option>
+                <option value="Programação">Programação</option>
+                <option value="Outra">Outra</option>
+              </select>
+            </div>
+          </div>
+
+          <ul id="task-list" class="task-list" aria-label="Lista de tarefas"></ul>
+
+          <div id="empty-state" class="empty-state" aria-live="polite">
+            <div class="empty-illustration" aria-hidden="true">✦</div>
+            <h3 id="empty-title">Nenhuma tarefa por aqui</h3>
+            <p id="empty-desc">Adicione uma tarefa no formulário para começar seu planejamento.</p>
+          </div>
+
+          <div class="list-footer">
+            <span id="list-summary" aria-live="polite">Tudo em dia?</span>
+            <button id="clear-done" class="text-btn" type="button" disabled aria-disabled="true">
+              Limpar concluídas
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ABA 2: HORÁRIOS PLANEJADOS -->
+    <div id="schedule-view" class="tab-content" role="tabpanel" aria-labelledby="tab-schedule" style="display: none;">
+      <section class="stats" aria-label="Resumo dos horários planejados">
+        <article class="stat-card">
+          <div class="stat-icon purple" aria-hidden="true">⏰</div>
+          <div class="stat-info">
+            <p>Total planejado</p>
+            <strong id="sched-total-hours">0h 00m</strong>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon orange" aria-hidden="true">📅</div>
+          <div class="stat-info">
+            <p>Dias com estudo</p>
+            <strong id="sched-active-days">0 dias</strong>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon blue" aria-hidden="true">📚</div>
+          <div class="stat-info">
+            <p>Matérias ativas</p>
+            <strong id="sched-active-subjects">0 matérias</strong>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon green" aria-hidden="true">⚡</div>
+          <div class="stat-info">
+            <p>Status atual</p>
+            <strong id="sched-current-status" class="status-highlight">Livre agora</strong>
+          </div>
+        </article>
+      </section>
+
+      <section class="workspace schedule-workspace">
+        <div class="panel schedule-form-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" id="sched-form-eyebrow">CRONOGRAMA</p>
+              <h2 id="sched-form-heading">Planejar horário</h2>
+            </div>
+            <span id="sched-heading-icon" class="heading-icon" aria-hidden="true">⏰</span>
+          </div>
+
+          <form id="schedule-form" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label for="sched-subject">Matéria <span class="required" aria-hidden="true">*</span></label>
+                <select id="sched-subject" name="subject" required aria-describedby="sched-form-message">
+                  <option value="">Escolha a matéria</option>
+                  <option value="Matemática">Matemática</option>
+                  <option value="Português">Português</option>
+                  <option value="História">História</option>
+                  <option value="Geografia">Geografia</option>
+                  <option value="Ciências">Ciências</option>
+                  <option value="Inglês">Inglês</option>
+                  <option value="Artes">Artes</option>
+                  <option value="Programação">Programação</option>
+                  <option value="Outra">Outra</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="sched-day">Dia da semana <span class="required" aria-hidden="true">*</span></label>
+                <select id="sched-day" name="day" required aria-describedby="sched-form-message">
+                  <option value="">Escolha o dia</option>
+                  <option value="segunda">Segunda-feira</option>
+                  <option value="terca">Terça-feira</option>
+                  <option value="quarta">Quarta-feira</option>
+                  <option value="quinta">Quinta-feira</option>
+                  <option value="sexta">Sexta-feira</option>
+                  <option value="sabado">Sábado</option>
+                  <option value="domingo">Domingo</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="sched-start">Início <span class="required" aria-hidden="true">*</span></label>
+                <input id="sched-start" name="startTime" type="time" required aria-describedby="sched-form-message">
+              </div>
+              <div class="field">
+                <label for="sched-end">Término <span class="required" aria-hidden="true">*</span></label>
+                <input id="sched-end" name="endTime" type="time" required aria-describedby="sched-form-message">
+              </div>
+            </div>
+
+            <label for="sched-notes">Meta / Foco do estudo <span class="optional">(opcional)</span></label>
+            <input id="sched-notes" name="notes" type="text" maxlength="80" placeholder="Ex.: Foco em resolução de exercícios e resumos" autocomplete="off">
+            <p class="field-hint">Descreva o objetivo da sessão de estudos.</p>
+
+            <div class="form-actions">
+              <button id="add-sched-btn" class="primary-btn" type="submit">
+                <span id="sched-btn-icon" class="btn-icon" aria-hidden="true">＋</span>
+                <span id="sched-submit-text">Salvar horário</span>
+              </button>
+              <button id="cancel-sched-edit-btn" class="secondary-btn" type="button" style="display: none;">
+                Cancelar
+              </button>
+            </div>
+
+            <p id="sched-form-message" class="message" role="status" aria-live="polite" aria-atomic="true"></p>
+          </form>
+        </div>
+
+        <div class="panel schedule-display-panel">
+          <div class="tasks-heading">
+            <div>
+              <p class="eyebrow">GRADE SEMANAL</p>
+              <h2>Horários de estudo</h2>
+            </div>
+            <span id="sched-badge" class="count-badge">0 sessões</span>
+          </div>
+
+          <div class="day-chips-nav" role="tablist" aria-label="Filtrar por dia da semana">
+            <button class="day-chip active" data-day="todos" type="button">Semana completa</button>
+            <button class="day-chip" data-day="segunda" type="button">Seg</button>
+            <button class="day-chip" data-day="terca" type="button">Ter</button>
+            <button class="day-chip" data-day="quarta" type="button">Qua</button>
+            <button class="day-chip" data-day="quinta" type="button">Qui</button>
+            <button class="day-chip" data-day="sexta" type="button">Sex</button>
+            <button class="day-chip" data-day="sabado" type="button">Sáb</button>
+            <button class="day-chip" data-day="domingo" type="button">Dom</button>
+          </div>
+
+          <div id="schedule-list" class="schedule-list" aria-label="Lista de horários planejados"></div>
+
+          <div id="sched-empty-state" class="empty-state" aria-live="polite">
+            <div class="empty-illustration" aria-hidden="true">📅</div>
+            <h3 id="sched-empty-title">Nenhum horário planejado</h3>
+            <p id="sched-empty-desc">Defina matérias, dias e horários no formulário para montar sua rotina semanal.</p>
+          </div>
+
+          <div class="list-footer">
+            <span id="sched-list-summary">Organize sua semana com foco</span>
+            <button id="clear-all-sched" class="text-btn" type="button" disabled aria-disabled="true">
+              Limpar horários
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ABA 3: QUIZ INTERATIVO COM IA TUTORA SOCRÁTICA -->
+    <div id="quiz-view" class="tab-content" role="tabpanel" aria-labelledby="tab-quiz" style="display: none;">
+      <!-- TELA 1: CONFIGURAÇÃO DO QUIZ -->
+      <section id="quiz-setup-screen" class="panel quiz-setup-panel">
+        <div class="quiz-setup-header">
+          <span class="badge-tag">APRENDIZADO ATIVO</span>
+          <h2>Quiz de Estudos com IA Tutora Socrática</h2>
+          <p>Selecione qualquer matéria escolar ou digite uma matéria personalizada. Durante o quiz, a IA estará ao seu lado para esclarecer dúvidas e guiar seu raciocínio, sem entregar a resposta direta!</p>
+        </div>
+
+        <form id="quiz-start-form" class="quiz-start-form">
+          <!-- Linha 1: Matéria e Escolaridade -->
+          <div class="field-row">
+            <div class="field">
+              <label for="quiz-subject-select">1. Matéria / Disciplina <span class="required" aria-hidden="true">*</span></label>
+              <select id="quiz-subject-select" required>
+                <option value="Matemática">Matemática (Álgebra, Geometria, Lógica)</option>
+                <option value="Português">Português (Gramática, Interpretação, Sintaxe)</option>
+                <option value="História">História (Brasil e Geral)</option>
+                <option value="Geografia">Geografia (Clima, Geopolítica, Relevo)</option>
+                <option value="Ciências">Ciências & Biologia (Ecologia, Célula, Genética)</option>
+                <option value="Física">Física (Cinemática, Energia, Termologia)</option>
+                <option value="Química">Química (Átomos, Tabela Periódica, Ligações)</option>
+                <option value="Inglês">Inglês (Vocabulário, Reading, Gramática)</option>
+                <option value="Filosofia">Filosofia & Sociologia</option>
+                <option value="Programação">Programação (Lógica, HTML/CSS, JS)</option>
+                <option value="personalizada">✏️ Outra matéria personalizada...</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="quiz-education-level">2. Escolaridade da matéria <span class="required" aria-hidden="true">*</span></label>
+              <select id="quiz-education-level" required>
+                <option value="fundamental">Ensino Fundamental (6º ao 9º ano)</option>
+                <option value="medio" selected>Ensino Médio / ENEM / Pré-Vestibular</option>
+                <option value="superior">Ensino Superior / Graduação</option>
+                <option value="concurso">Concurso Público / Nível Avançado</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Campo para Matéria Personalizada -->
+          <div id="custom-subject-row" class="field" style="display: none; margin-bottom: 16px;">
+            <label for="custom-subject-input">Nome da matéria personalizada <span class="required" aria-hidden="true">*</span></label>
+            <input id="custom-subject-input" type="text" placeholder="Ex.: Literatura Barroca, Astronomia, Economia..." maxlength="50">
+          </div>
+
+          <!-- Linha 2: Assunto específico com sugestões dinâmicas -->
+          <div class="field" style="margin-bottom: 16px;">
+            <label for="quiz-topic-input">3. Qual é o assunto ou tema específico? <span class="required" aria-hidden="true">*</span></label>
+            <input id="quiz-topic-input" type="text" list="topic-suggestions" placeholder="Ex.: Funções e Gráficos, Revolução Francesa, Orações Subordinadas, Genética..." maxlength="80" required>
+            <datalist id="topic-suggestions">
+              <!-- Preenchido dinamicamente de acordo com a matéria -->
+              <option value="Funções e Gráficos">
+              <option value="Equações do 2º Grau">
+              <option value="Trigonometria e Triângulos">
+              <option value="Geometria Plana e Espacial">
+              <option value="Probabilidade e Estatística">
+            </datalist>
+            <p class="field-hint">Defina o tema exato para calibrar as perguntas conceituais e a IA.</p>
+          </div>
+
+          <!-- Linha 3: Para o que é & Por que do assunto -->
+          <div class="field-row">
+            <div class="field">
+              <label for="quiz-goal-select">4. Para o que é? (Objetivo) <span class="required" aria-hidden="true">*</span></label>
+              <select id="quiz-goal-select" required>
+                <option value="prova_escolar" selected>📝 Prova escolar ou bimestral</option>
+                <option value="enem_vestibular">🎯 ENEM ou Vestibular</option>
+                <option value="concurso">🏛️ Concurso Público / Seleção</option>
+                <option value="faculdade">🎓 Prova da Faculdade / N2 / Exame</option>
+                <option value="reforco">💡 Superar dificuldade e reforçar base</option>
+                <option value="curiosidade">🚀 Curiosidade e aprendizado livre</option>
+                <option value="outro">✏️ Outro objetivo (especificar)...</option>
+              </select>
+              <div id="custom-goal-row" style="display: none; margin-top: 8px;">
+                <input id="custom-goal-input" type="text" placeholder="Ex.: Exame de certificação profissional..." maxlength="60">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="quiz-reason-select">5. Por que deste assunto? (Motivo) <span class="required" aria-hidden="true">*</span></label>
+              <select id="quiz-reason-select" required>
+                <option value="dificuldade" selected>Tenho dúvida nesse tema e quero destravar</option>
+                <option value="peso_prova">Cai com muito peso na prova e preciso gabaritar</option>
+                <option value="revisao">Já vi a teoria e quero testar se fixei</option>
+                <option value="pratica">Quero treinar interpretação e evitar pegadinhas</option>
+                <option value="prerequisito">É pré-requisito para avançar no cronograma</option>
+                <option value="outro">Outro motivo (especificar)...</option>
+              </select>
+              <div id="custom-reason-row" style="display: none; margin-top: 8px;">
+                <input id="custom-reason-input" type="text" placeholder="Ex.: Tive dificuldade na última aula..." maxlength="80">
+              </div>
+            </div>
+          </div>
+
+          <!-- Linha 4: Quantidade de perguntas -->
+          <div class="field" style="margin-bottom: 20px;">
+            <label for="quiz-questions-count">Quantidade de perguntas</label>
+            <select id="quiz-questions-count">
+              <option value="3">3 perguntas (Rápido - 3 a 5 min)</option>
+              <option value="5" selected>5 perguntas (Ideal - 7 a 10 min)</option>
+              <option value="8">8 perguntas (Completo - Simulado)</option>
+            </select>
+          </div>
+
+          <div class="ai-rule-notice">
+            <span class="notice-icon">🤖</span>
+            <div class="notice-text">
+              <strong>Como a IA Tutora Socrática vai te ajudar:</strong>
+              <p>A IA adapta as dicas à <strong>escolaridade</strong>, ao <strong>assunto</strong> e ao seu <strong>objetivo</strong>. Ela responde com pistas conceituais, perguntas de reflexão e análise de alternativas — <strong>sem nunca entregar a resposta pronta ou a letra</strong>!</p>
+            </div>
+          </div>
+
+          <button id="start-quiz-btn" class="primary-btn quiz-big-btn" type="submit">
+            <span>🚀 Iniciar Quiz Personalizado com IA</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- TELA 2: ÁREA DA QUESTÃO ATIVA COM IA TUTORA -->
+      <section id="quiz-active-screen" class="quiz-active-layout" style="display: none;">
+        <!-- Coluna da Questão -->
+        <div class="panel question-panel">
+          <div class="question-top-bar">
+            <div class="top-bar-tags">
+              <span id="quiz-active-subject" class="subject-pill">Matemática</span>
+              <span id="quiz-active-level" class="level-pill">Ensino Médio</span>
+              <span id="quiz-active-topic" class="topic-pill">Assunto</span>
+            </div>
+            <div class="top-bar-counters">
+              <span id="quiz-progress-text" class="question-tracker">Pergunta 1 de 5</span>
+              <span id="quiz-score-badge" class="count-badge">0 acertos</span>
+            </div>
+          </div>
+
+          <div class="quiz-progress-bar-track">
+            <div id="quiz-progress-bar-fill" class="quiz-progress-bar-fill"></div>
+          </div>
+
+          <h3 id="question-statement" class="question-title">Carregando pergunta...</h3>
+
+          <div id="question-options" class="question-options-list">
+            <!-- Alternativas A, B, C, D carregadas dinamicamente -->
+          </div>
+
+          <!-- Caixa de Feedback após responder -->
+          <div id="question-feedback-box" class="question-feedback-box" style="display: none;">
+            <div id="feedback-icon-title" class="feedback-title">✓ Resposta Correta!</div>
+            <p id="feedback-explanation">Explicação detalhada...</p>
+            <button id="next-question-btn" class="primary-btn" type="button">
+              <span>Próxima pergunta</span> ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- Coluna da IA Tutora Socrática -->
+        <div class="panel tutor-panel">
+          <div class="tutor-header">
+            <div class="tutor-identity">
+              <span class="tutor-avatar">🤖</span>
+              <div>
+                <h4>IA Tutora StudyFlow</h4>
+                <span class="tutor-status">● Modo Socrático Ativo</span>
+              </div>
+            </div>
+            <span class="tutor-rule-tag" title="A IA não fornece a resposta direta">Anti-Spoiler</span>
+          </div>
+
+          <!-- Mensagens da IA Tutora -->
+          <div id="tutor-chat-messages" class="tutor-chat-box" aria-live="polite">
+            <div class="tutor-bubble">
+              <p>Olá! Sou sua tutora de estudos com inteligência artificial. Se tiver qualquer dúvida sobre esta questão, me pergunte! Vou guiar seu raciocínio com dicas sem dar a resposta direta.</p>
+            </div>
+          </div>
+
+          <!-- Atalhos Rápidos para Dúvidas -->
+          <div class="tutor-quick-prompts">
+            <button class="tutor-chip-btn" data-prompt="pista" type="button">💡 Pedir pista teórica</button>
+            <button class="tutor-chip-btn" data-prompt="interpretacao" type="button">🔍 Como interpretar o texto?</button>
+            <button class="tutor-chip-btn" data-prompt="eliminacao" type="button">❌ Dica para eliminar opções</button>
+          </div>
+
+          <!-- Campo de Dúvidas Livre com a IA -->
+          <form id="tutor-ask-form" class="tutor-input-form">
+            <input id="tutor-user-input" type="text" placeholder="Pergunte sua dúvida para a IA..." autocomplete="off">
+            <button id="tutor-send-btn" class="tutor-send-btn" type="submit" aria-label="Enviar dúvida para a IA">➔</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TELA 3: RESULTADO FINAL DO QUIZ -->
+      <section id="quiz-results-screen" class="panel quiz-results-panel" style="display: none;">
+        <div class="results-trophy">🏆</div>
+        <h2>Quiz Concluído com Sucesso!</h2>
+        <p id="results-score-phrase" class="results-score-text">Você acertou 4 de 5 perguntas (80%).</p>
+
+        <!-- Resumo do Perfil Estudado -->
+        <div id="quiz-results-profile-summary" class="results-profile-summary">
+          <div class="profile-summary-item">
+            <span class="psi-label">Matéria</span>
+            <strong id="res-profile-subject">Matemática</strong>
+          </div>
+          <div class="profile-summary-item">
+            <span class="psi-label">Assunto</span>
+            <strong id="res-profile-topic">Funções</strong>
+          </div>
+          <div class="profile-summary-item">
+            <span class="psi-label">Escolaridade</span>
+            <strong id="res-profile-level">Ensino Médio / ENEM</strong>
+          </div>
+          <div class="profile-summary-item">
+            <span class="psi-label">Objetivo</span>
+            <strong id="res-profile-goal">Prova escolar</strong>
+          </div>
+        </div>
+        
+        <div class="results-stats-row">
+          <div class="r-stat">
+            <span class="r-num" id="r-correct-count">4</span>
+            <span class="r-label">Acertos</span>
+          </div>
+          <div class="r-stat">
+            <span class="r-num" id="r-wrong-count">1</span>
+            <span class="r-label">Erros</span>
+          </div>
+          <div class="r-stat">
+            <span class="r-num" id="r-pct-count">80%</span>
+            <span class="r-label">Aproveitamento</span>
+          </div>
+        </div>
+
+        <p id="results-feedback-msg" class="results-feedback-msg">Excelente desempenho! Seus estudos estão dando resultados visíveis.</p>
+
+        <div class="results-actions">
+          <button id="restart-same-quiz-btn" class="secondary-btn" type="button">Refazer este Quiz</button>
+          <button id="new-quiz-btn" class="primary-btn" type="button">Escolher outra matéria</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ABA 4: DICAS DE ESTUDO -->
+    <div id="tips-view" class="tab-content" role="tabpanel" aria-labelledby="tab-tips" style="display: none;">
+      <div class="ebook-promo-card">
+        <div class="ebook-promo-info">
+          <span class="badge-tag">GUIA PREMIUM</span>
+          <h2>E-book Oficial: O Método StudyFlow</h2>
+          <p>Aprenda a estudar com neurociência aplicada, mapas mentais e técnicas avançadas para tirar notas máximas sem ansiedade.</p>
+          <div class="ebook-price-row">
+            <span class="price-strike">De R$ 49,90</span>
+            <span class="price-deal">Por apenas <strong>R$ 19,90</strong></span>
+            <span class="price-sub">Pagamento único (Pix, Cartão ou Boleto)</span>
+          </div>
+        </div>
+        <button id="promo-buy-btn" class="promo-buy-btn" type="button">
+          <span>Adquirir E-book por R$ 19,90</span> ➔
+        </button>
+      </div>
+
+      <div class="tips-header-row">
+        <div>
+          <p class="eyebrow">NEUROCIÊNCIA & PRODUTIVIDADE</p>
+          <h2>Dicas para potencializar seus estudos</h2>
+        </div>
+        <div class="tip-categories-nav">
+          <button class="tip-filter-btn active" data-category="todas" type="button">Todas</button>
+          <button class="tip-filter-btn" data-category="tecnicas" type="button">Técnicas</button>
+          <button class="tip-filter-btn" data-category="memorizacao" type="button">Memorização</button>
+          <button class="tip-filter-btn" data-category="foco" type="button">Foco & Rotina</button>
+        </div>
+      </div>
+
+      <div id="tips-grid" class="tips-grid">
+        <article class="tip-card" data-category="tecnicas">
+          <div class="tip-card-header">
+            <span class="tip-icon red-icon">🍅</span>
+            <span class="tip-category-pill">Técnicas</span>
+          </div>
+          <h3>Método Pomodoro</h3>
+          <p>Divida seus estudos em blocos de <strong>25 minutos de foco absoluto</strong>, seguidos por <strong>5 minutos de descanso</strong> completo (longe de telas).</p>
+          <div class="tip-action-box">
+            <strong>Como aplicar:</strong> Após 4 blocos de 25min, faça uma pausa maior de 15 a 30 minutos para recarregar o cérebro.
+          </div>
+        </article>
+
+        <article class="tip-card" data-category="memorizacao">
+          <div class="tip-card-header">
+            <span class="tip-icon purple-icon">💡</span>
+            <span class="tip-category-pill">Memorização</span>
+          </div>
+          <h3>Técnica de Feynman</h3>
+          <p>A melhor forma de aprender um assunto complexo é tentar <strong>explicá-lo em voz alta</strong> com palavras simples, como se falasse com uma criança de 10 anos.</p>
+          <div class="tip-action-box">
+            <strong>Como aplicar:</strong> Sempre que travar na explicação, volte ao material e revise o trecho até conseguir simplificar.
+          </div>
+        </article>
+
+        <article class="tip-card" data-category="memorizacao">
+          <div class="tip-card-header">
+            <span class="tip-icon blue-icon">📈</span>
+            <span class="tip-category-pill">Memorização</span>
+          </div>
+          <h3>Repetição Espaçada</h3>
+          <p>O cérebro esquece até 70% do conteúdo em 24h (Curva do Esquecimento). Revise em intervalos: <strong>1 dia, 3 dias, 7 dias e 15 dias</strong> após o primeiro contato.</p>
+          <div class="tip-action-box">
+            <strong>Como aplicar:</strong> Crie pequenas revisões de 10 minutos na sua grade de horários do StudyFlow.
+          </div>
+        </article>
+
+        <article class="tip-card" data-category="tecnicas">
+          <div class="tip-card-header">
+            <span class="tip-icon green-icon">✍️</span>
+            <span class="tip-category-pill">Técnicas</span>
+          </div>
+          <h3>Estudo Ativo (Active Recall)</h3>
+          <p>Reler textos com marca-texto dá a falsa sensação de aprendizado. O método científico mais eficaz é <strong>fechar o livro e escrever o que você lembra</strong>.</p>
+          <div class="tip-action-box">
+            <strong>Como aplicar:</strong> Resolva questões de provas anteriores e faça auto-perguntas antes de conferir o gabarito.
+          </div>
+        </article>
+
+        <article class="tip-card" data-category="foco">
+          <div class="tip-card-header">
+            <span class="tip-icon orange-icon">📵</span>
+            <span class="tip-category-pill">Foco & Rotina</span>
+          </div>
+          <h3>Ambiente Livre de Distrações</h3>
+          <p>Mesmo virado de cabeça para baixo na mesa, o smartphone reduz a capacidade cognitiva e a concentração em até 20%.</p>
+          <div class="tip-action-box">
+            <strong>Como aplicar:</strong> Deixe o celular em outro cômodo ou use o modo Não Perturbe durante suas sessões de estudo.
+          </div>
+        </article>
+
+        <article class="tip-card" data-category="foco">
+          <div class="tip-card-header">
+            <span class="tip-icon blue-icon">🌙</span>
+            <span class="tip-category-pill">Foco & Rotina</span>
+          </div>
+          <h3>Sono é Aprendizado</h3>
+          <p>As conexões sinápticas que fixam memórias de longo prazo ocorrem exclusivamente durante o sono profundo. Virar a noite estudando é contraproducente.</p>
+          <div class="tip-action-box">
+            <strong>Como aplicar:</strong> Mantenha de 7 a 8 horas de sono regular para acordar com a mente pronta para absorver novidades.
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- ABA 5: E-BOOK PAGO (R$ 19,90) -->
+    <div id="ebook-view" class="tab-content" role="tabpanel" aria-labelledby="tab-ebook" style="display: none;">
+      <div id="ebook-showcase" class="ebook-showcase">
+        <div class="ebook-hero-grid">
+          <div class="ebook-cover-wrapper">
+            <div class="ebook-3d-book">
+              <div class="book-spine"></div>
+              <div class="book-front">
+                <span class="book-brand">STUDYFLOW</span>
+                <h3>O Guia Definitivo do Estudante de Alta Performance</h3>
+                <p class="book-subtitle">Neurociência, Memorização Acelerada e Rotina à Prova de Procrastinação</p>
+                <div class="book-badge">EDIÇÃO EXCLUSIVA</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ebook-hero-copy">
+            <div class="sale-badge">⚡ OFERTA ESPECIAL DISPONÍVEL NO APP</div>
+            <h2>O Guia Definitivo do Estudante de Alta Performance</h2>
+            <p class="hero-desc">Descubra as táticas exatas que os melhores estudantes do mundo usam para absorver matérias difíceis na metade do tempo, sem estresse e sem virar noites.</p>
+
+            <div class="features-checklist">
+              <div class="feature-item"><span>✓</span> <strong>Neurociência da Aprendizagem:</strong> Como o cérebro realmente grava informações.</div>
+              <div class="feature-item"><span>✓</span> <strong>Cronograma Semanal Sem Falhas:</strong> Passo a passo para nunca mais atrasar matérias.</div>
+              <div class="feature-item"><span>✓</span> <strong>Tríade da Memória Blindada:</strong> Feynman + Active Recall + Spaced Repetition na prática.</div>
+              <div class="feature-item"><span>✓</span> <strong>Destrua a Procrastinação:</strong> O método dos 5 minutos para começar qualquer estudo.</div>
+              <div class="feature-item"><span>✓</span> <strong>Bônus Exclusivo:</strong> Checklists imprimíveis de revisão e mapas mentais prontos.</div>
+            </div>
+
+            <div class="price-box">
+              <div class="price-main">
+                <span class="old-val">R$ 49,90</span>
+                <span class="new-val">R$ 19,90</span>
+                <span class="installment">ou 2x de R$ 9,95 sem juros</span>
+              </div>
+              <button id="open-checkout-btn" class="cta-checkout-btn" type="button">
+                <span>Comprar E-book por R$ 19,90</span> ➔
+              </button>
+            </div>
+
+            <div class="payment-badges-row">
+              <span class="p-badge">💳 Cartão de Crédito</span>
+              <span class="p-badge">⚡ Pix (Liberação Imediata)</span>
+              <span class="p-badge">📄 Boleto Bancário</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="curriculum-section">
+          <h3>O que você vai aprender nos 5 Capítulos do E-book:</h3>
+          <div class="curriculum-grid">
+            <div class="curriculum-card">
+              <span class="cap-num">CAPÍTULO 1</span>
+              <h4>A Ciência da Absorção Rápida</h4>
+              <p>Entenda o funcionamento dos hemisférios cerebrais, modo focado versus difuso e como entrar em estado de hiperfoco voluntário.</p>
+            </div>
+            <div class="curriculum-card">
+              <span class="cap-num">CAPÍTULO 2</span>
+              <h4>Montagem da Grade Semanal Invencível</h4>
+              <p>Como distribuir matérias difíceis e fáceis ao longo da semana no StudyFlow para evitar a fadiga mental e manter a consistência.</p>
+            </div>
+            <div class="curriculum-card">
+              <span class="cap-num">CAPÍTULO 3</span>
+              <h4>Técnicas de Memorização Permanente</h4>
+              <p>Aplicação detalhada dos métodos Feynman e Active Recall com exemplos práticos em Matemática, História, Biologia e Idiomas.</p>
+            </div>
+            <div class="curriculum-card">
+              <span class="cap-num">CAPÍTULO 4</span>
+              <h4>Blindagem Anti-Procrastinação</h4>
+              <p>Mecanismos psicológicos para quebrar o ciclo de adiar tarefas difíceis e como criar gatilhos de recompensa imediata.</p>
+            </div>
+            <div class="curriculum-card">
+              <span class="cap-num">CAPÍTULO 5</span>
+              <h4>Estratégias para o Dia da Prova</h4>
+              <p>Como controlar o nervosismo, gerenciar o tempo de resolução de questões e estruturar redações nota máxima.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="ebook-reader" class="ebook-reader" style="display: none;">
+        <div class="reader-header">
+          <div>
+            <span class="access-badge">✓ E-BOOK ADQUIRIDO COM SUCESSO</span>
+            <h2>O Guia Definitivo do Estudante de Alta Performance</h2>
+          </div>
+          <div class="reader-actions">
+            <button id="print-ebook-btn" class="reader-action-btn" type="button">🖨️ Imprimir / Salvar PDF</button>
+            <button id="reset-purchase-btn" class="text-btn" type="button" title="Reinicia o teste do fluxo de pagamento">
+              Simular nova compra
+            </button>
+          </div>
+        </div>
+
+        <div class="reader-layout">
+          <nav class="reader-nav" aria-label="Capítulos do E-book">
+            <p class="reader-nav-title">SUMÁRIO</p>
+            <button class="reader-tab-btn active" data-chapter="1" type="button">1. A Ciência da Absorção Rápida</button>
+            <button class="reader-tab-btn" data-chapter="2" type="button">2. Grade Semanal Invencível</button>
+            <button class="reader-tab-btn" data-chapter="3" type="button">3. Memorização Permanente</button>
+            <button class="reader-tab-btn" data-chapter="4" type="button">4. Blindagem Anti-Procrastinação</button>
+            <button class="reader-tab-btn" data-chapter="5" type="button">5. Estratégias para Provas</button>
+          </nav>
+
+          <article id="reader-content" class="reader-content"></article>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span>StudyFlow</span> · Feito para estudar com mais tranquilidade e foco <span class="footer-star" aria-hidden="true">✦</span>
+    </footer>
+  </main>
+
+  <!-- MODAL DE CHECKOUT / PAGAMENTO COM CHAVE PIX 14997549129 -->
+  <div id="checkout-modal" class="modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <span class="modal-tag">PAGAMENTO SEGURO</span>
+          <h2 id="checkout-modal-title">Finalizar compra do E-book</h2>
+        </div>
+        <button id="close-checkout-btn" class="modal-close-btn" type="button" aria-label="Fechar janela de pagamento">×</button>
+      </div>
+
+      <div class="order-summary-box">
+        <div class="order-item-desc">
+          <strong>E-book: O Guia Definitivo do Estudante</strong>
+          <span>Acesso vitalício imediato no aplicativo</span>
+        </div>
+        <div class="order-item-price">
+          <span class="val-label">Valor total:</span>
+          <strong class="val-price">R$ 19,90</strong>
+        </div>
+      </div>
+
+      <div class="payment-tabs-nav" role="tablist" aria-label="Formas de pagamento">
+        <button id="pay-tab-pix" class="pay-tab active" role="tab" aria-selected="true" type="button">
+          <span class="pay-icon" aria-hidden="true">⚡</span>
+          <span>PIX</span>
+          <span class="instant-pill">Imediato</span>
+        </button>
+        <button id="pay-tab-card" class="pay-tab" role="tab" aria-selected="false" type="button">
+          <span class="pay-icon" aria-hidden="true">💳</span>
+          <span>Cartão de Crédito</span>
+        </button>
+        <button id="pay-tab-boleto" class="pay-tab" role="tab" aria-selected="false" type="button">
+          <span class="pay-icon" aria-hidden="true">📄</span>
+          <span>Boleto Bancário</span>
+        </button>
+      </div>
+
+      <!-- PAINEL PIX COM NÚMERO 14997549129 -->
+      <div id="pay-panel-pix" class="payment-panel active">
+        <div class="pix-instructions">
+          <div class="pix-key-highlight-card">
+            <span class="pix-type-label">CHAVE PIX (TELEFONE / CELULAR):</span>
+            <strong class="pix-number-display">14997549129</strong>
+            <span class="pix-formatted-display">(14) 99754-9129 · Beneficiário: StudyFlow</span>
+            <button id="copy-single-pix-key" class="copy-key-btn" type="button">📋 Copiar chave: 14997549129</button>
+          </div>
+
+          <div class="qr-code-box">
+            <svg class="pix-svg-qr" viewBox="0 0 160 160" width="140" height="140" aria-label="QR Code Pix R$ 19,90 Chave 14997549129">
+              <rect width="160" height="160" fill="white" rx="10"/>
+              <rect x="15" y="15" width="40" height="40" fill="#1b1834" rx="4"/>
+              <rect x="23" y="23" width="24" height="24" fill="white" rx="2"/>
+              <rect x="29" y="29" width="12" height="12" fill="#6351df"/>
+              
+              <rect x="105" y="15" width="40" height="40" fill="#1b1834" rx="4"/>
+              <rect x="113" y="23" width="24" height="24" fill="white" rx="2"/>
+              <rect x="119" y="29" width="12" height="12" fill="#6351df"/>
+
+              <rect x="15" y="105" width="40" height="40" fill="#1b1834" rx="4"/>
+              <rect x="23" y="113" width="24" height="24" fill="white" rx="2"/>
+              <rect x="29" y="119" width="12" height="12" fill="#6351df"/>
+
+              <circle cx="80" cy="80" r="14" fill="#00b494"/>
+              <text x="80" y="85" text-anchor="middle" fill="white" font-size="11" font-weight="bold">PIX</text>
+              <rect x="65" y="20" width="12" height="20" fill="#1b1834"/>
+              <rect x="85" y="30" width="10" height="25" fill="#1b1834"/>
+              <rect x="25" y="65" width="25" height="10" fill="#1b1834"/>
+              <rect x="110" y="70" width="25" height="10" fill="#1b1834"/>
+              <rect x="65" y="110" width="18" height="15" fill="#1b1834"/>
+              <rect x="110" y="110" width="15" height="25" fill="#1b1834"/>
+            </svg>
+            <div class="pix-qr-info">
+              <span class="qr-price">R$ 19,90</span>
+              <span class="qr-timer">Chave: 14997549129</span>
+            </div>
+          </div>
+
+          <label for="pix-copy-input">Pix Copia e Cola completo:</label>
+          <div class="copy-input-row">
+            <input id="pix-copy-input" type="text" readonly value="00020126580014br.gov.bcb.pix0114+5514997549129520400005303986540519.905802BR5915StudyFlow Cursos6009Sao Paulo62070503***6304ABCD">
+            <button id="copy-pix-btn" class="copy-btn" type="button">Copiar código</button>
+          </div>
+
+          <button id="confirm-pix-btn" class="confirm-pay-btn" type="button">
+            <span>Já fiz o Pix (14997549129) · Liberar E-book</span> ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- PAINEL CARTÃO DE CRÉDITO -->
+      <div id="pay-panel-card" class="payment-panel" style="display: none;">
+        <form id="card-payment-form" novalidate>
+          <div class="virtual-card">
+            <div class="vcard-top">
+              <span class="vcard-chip"></span>
+              <span id="vcard-brand" class="vcard-brand">CARTÃO</span>
+            </div>
+            <div id="vcard-number" class="vcard-number">•••• •••• •••• ••••</div>
+            <div class="vcard-bottom">
+              <div>
+                <span class="vcard-label">TITULAR</span>
+                <div id="vcard-holder" class="vcard-name">SEU NOME</div>
+              </div>
+              <div>
+                <span class="vcard-label">VALIDADE</span>
+                <div id="vcard-exp" class="vcard-exp">MM/AA</div>
+              </div>
+            </div>
+          </div>
+
+          <label for="card-num">Número do cartão</label>
+          <input id="card-num" type="text" placeholder="0000 0000 0000 0000" maxlength="19" required inputmode="numeric">
+
+          <label for="card-name">Nome impresso no cartão</label>
+          <input id="card-name" type="text" placeholder="Ex.: CAUA M S RAMOS" maxlength="40" required autocomplete="cc-name">
+
+          <div class="field-row">
+            <div class="field">
+              <label for="card-exp">Validade (MM/AA)</label>
+              <input id="card-exp" type="text" placeholder="MM/AA" maxlength="5" required inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="card-cvv">Código CVV</label>
+              <input id="card-cvv" type="text" placeholder="123" maxlength="4" required inputmode="numeric">
+            </div>
+          </div>
+
+          <label for="card-installments">Opções de parcelamento</label>
+          <select id="card-installments">
+            <option value="1">1x de R$ 19,90 (sem juros)</option>
+            <option value="2">2x de R$ 9,95 (sem juros)</option>
+          </select>
+
+          <button id="pay-card-btn" class="confirm-pay-btn" type="submit">
+            <span>Pagar R$ 19,90 com Cartão</span> ➔
+          </button>
+          <p id="card-error-msg" class="message error" style="display: none;"></p>
+        </form>
+      </div>
+
+      <!-- PAINEL BOLETO BANCÁRIO -->
+      <div id="pay-panel-boleto" class="payment-panel" style="display: none;">
+        <div class="boleto-box">
+          <p>O boleto bancário é emitido na hora e pode ser pago em qualquer banco ou aplicativo:</p>
+          
+          <div class="barcode-visual">
+            <div class="barcode-lines" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <strong class="boleto-due">Vencimento: em 3 dias úteis</strong>
+          </div>
+
+          <label for="boleto-code-input">Linha digitável do boleto:</label>
+          <div class="copy-input-row">
+            <input id="boleto-code-input" type="text" readonly value="34191.79001 01043.510047 91020.150008 4 98760000001990">
+            <button id="copy-boleto-btn" class="copy-btn" type="button">Copiar linha</button>
+          </div>
+
+          <button id="confirm-boleto-btn" class="confirm-pay-btn" type="button">
+            <span>Simular compensação · Liberar E-book</span> ➔
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
